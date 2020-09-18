@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Todo;
 
 class ApiController extends Controller
 {
@@ -38,7 +39,8 @@ class ApiController extends Controller
         if (auth()->attempt($creds)) {
             $token = auth()->user()->createToken($phrase);
             return response()->json([
-                'message' => 'Logged in!'
+                'message' => 'Logged in!',
+                'token' => $token
             ], 200);
         } else {
             return response()->json([
@@ -48,7 +50,46 @@ class ApiController extends Controller
     }
     public function info(){
         return response()->json([
-            'user' => auth()->user()->id
+            'user' => auth()->user()
         ], 200);
+    }
+
+    public function addTodo(Request $request){
+
+        if(auth()->user()){
+            $todo = Todo::create([
+                'user_id' => auth()->user()->id,
+                'title' => $request->title
+            ]);
+            return response()->json([
+                'Message' => 'Added successfully!'
+            ], 200);
+        }
+        else{
+            return response()->json([
+                'error' => 'Unathorized'
+            ], 401);
+        }
+    }
+
+    public function todoDetails($id){
+        if(auth()->user()){
+            $todo = Todo::find($id);
+            if($todo->user_id != Auth()->user()->id){
+                return response()->json([
+                    'error' => 'This todo doesnt belong to you'
+                ], 401); 
+            }
+            else{
+                return response()->json([
+                    'data' => $todo
+                ], 200);
+            }
+        }
+        else{
+            return response()->json([
+                'error' => 'Unathorized'
+            ], 401);
+        }
     }
 }
