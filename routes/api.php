@@ -20,4 +20,6 @@ Route::post('/login', 'App\Http\Controllers\Api\ApiController@login');
 
 Route::middleware('auth:api')->group(function(){
     Route::get('/info', 'App\Http\Controllers\Api\ApiController@info');
+    Route::post('/addTodo', 'App\Http\Controllers\Api\ApiController@addTodo');
+    Route::get('/todoDetails/{id}', 'App\Http\Controllers\Api\ApiController@todoDetails');
 });
