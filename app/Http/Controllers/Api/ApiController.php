@@ -45,6 +45,10 @@ class ApiController extends Controller
                 'error' => 'Unathorized access'
             ], 401);
         }
-        
+    }
+    public function info(){
+        return response()->json([
+            'user' => auth()->user()->id
+        ], 200);
     }
 }

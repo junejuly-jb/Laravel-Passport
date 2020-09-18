@@ -18,6 +18,6 @@ Route::post('/register', 'App\Http\Controllers\Api\ApiController@register');
 Route::post('/login', 'App\Http\Controllers\Api\ApiController@login');
 
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:api')->group(function(){
+    Route::get('/info', 'App\Http\Controllers\Api\ApiController@info');
 });
