@@ -11,11 +11,6 @@ class ApiController extends Controller
     public function register(Request $request){
 
         $phrase = '!@#$%^&*()_+';
-        // $this->validate($request, [
-        //     'name' => 'required|min:3',
-        //     'email' => 'required|unique',
-        //     'password' => 'required|min:6',
-        // ]);
 
         $user = User::create([
             'name' => $request->name,
@@ -30,5 +25,26 @@ class ApiController extends Controller
             'message' => 'added successfully!',
             'token' => $token
         ], 200);
+    }
+
+    public function login(Request $request){
+
+        $phrase = '!@#$%^&*()_+';
+
+        $creds = [
+            'email' => $request->email,
+            'password' => $request->password
+        ];
+        if (auth()->attempt($creds)) {
+            $token = auth()->user()->createToken($phrase);
+            return response()->json([
+                'message' => 'Logged in!'
+            ], 200);
+        } else {
+            return response()->json([
+                'error' => 'Unathorized access'
+            ], 401);
+        }
+        
     }
 }
